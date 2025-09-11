@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trame - Rédiger une chronique radio</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- jsPDF depuis CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <!-- 🔹 Menu fixe -->
+  <nav class="navbar">
+    <a href="index.html">🏠 Accueil</a>
+    <a href="trame.html">✍️ Trame</a>
+    <a href="annexe.html">📑 Annexe</a>
+  </nav>
+
+  <header>
+    <h1>Trame</h1>
+    <h2>Rédige ta chronique radio</h2>
+  </header>
+
+  <main>
+    <form class="trame-form">
+      <h2>Rappel : Les 5W du journalisme</h2>
+      <ul class="fivew">
+        <li><strong>Who ?</strong> Qui est concerné ?</li>
+        <li><strong>What ?</strong> De quoi s’agit-il ?</li>
+        <li><strong>Where ?</strong> Où cela se passe-t-il ?</li>
+        <li><strong>When ?</strong> Quand cela a-t-il lieu ?</li>
+        <li><strong>Why ?</strong> Pourquoi en parler ?</li>
+      </ul>
+
+      <h2>Introduction</h2>
+      <label for="intro1">1) Définition / phrase générale :</label>
+      <textarea id="intro1" rows="3"></textarea>
+
+      <label for="intro2">2) Problématique :</label>
+      <textarea id="intro2" rows="3"></textarea>
+
+      <label for="intro3">3) Annonce du plan :</label>
+      <textarea id="intro3" rows="3"></textarea>
+
+      <h2>Développement</h2>
+      <label for="arg1">Argument 1 + exemple :</label>
+      <textarea id="arg1" rows="4"></textarea>
+
+      <label for="arg2">Argument 2 + exemple :</label>
+      <textarea id="arg2" rows="4"></textarea>
+
+      <label for="arg3">Argument 3 + exemple :</label>
+      <textarea id="arg3" rows="4"></textarea>
+
+      <h2>Conclusion</h2>
+      <label for="concl1">1) Résumé avec d’autres mots :</label>
+      <textarea id="concl1" rows="3"></textarea>
+
+      <label for="concl2">2) Nouvelle question :</label>
+      <textarea id="concl2" rows="3"></textarea>
+
+      <div class="actions">
+        <button type="button" onclick="compilerChronique()">✅ Valider et compiler</button>
+        <button type="button" onclick="resetChronique()">🗑️ Nouvelle chronique</button>
+      </div>
+    </form>
+
+    <section>
+      <h2>Chronique finale</h2>
+      <pre id="resultat" style="white-space: pre-wrap; background:#f4f7fa; padding:1rem; border-radius:8px;"></pre>
+
+      <div class="export">
+        <label for="fontSelect">Typographie :</label>
+        <select id="fontSelect">
+          <option value="times">Times</option>
+          <option value="helvetica">Helvetica</option>
+          <option value="courier">Courier</option>
+        </select>
+
+        <label for="fontSize">Taille :</label>
+        <input type="number" id="fontSize" value="12" min="8" max="30">
+
+        <button type="button" onclick="exportPDF()">📄 Exporter en PDF</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- 🔹 Script de gestion -->
+  <script>
+    const fields = ["intro1","intro2","intro3","arg1","arg2","arg3","concl1","concl2"];
+
+    // Charger les données sauvegardées
+    window.onload = function() {
+      fields.forEach(id => {
+        const saved = localStorage.getItem(id);
+        if (saved !== null) {
+          document.getElementById(id).value = saved;
+        }
+      });
+
+      const savedResult = localStorage.getItem("resultat");
+      if (savedResult !== null) {
+        document.getElementById("resultat").textContent = savedResult;
+      }
+    };
+
+    // Sauvegarde automatique à chaque saisie
+    fields.forEach(id => {
+      document.addEventListener("input", function(e) {
+        if (e.target.id === id) {
+          localStorage.setItem(id, e.target.value);
+        }
+      });
+    });
+
+    // Compiler et sauvegarder le texte final
+    function compilerChronique() {
+      const intro1 = document.getElementById("intro1").value;
+      const intro2 = document.getElementById("intro2").value;
+      const intro3 = document.getElementById("intro3").value;
+
+      const arg1 = document.getElementById("arg1").value;
+      const arg2 = document.getElementById("arg2").value;
+      const arg3 = document.getElementById("arg3").value;
+
+      const concl1 = document.getElementById("concl1").value;
+      const concl2 = document.getElementById("concl2").value;
+
+      const texteFinal =
+        "CHRONIQUE RADIO\n\n" +
+        "Introduction :\n" +
+        intro1 + " " + intro2 + " " + intro3 + "\n\n" +
+        "Développement :\n" +
+        "- " + arg1 + "\n" +
+        "- " + arg2 + "\n" +
+        "- " + arg3 + "\n\n" +
+        "Conclusion :\n" +
+        concl1 + " " + concl2;
+
+      document.getElementById("resultat").textContent = texteFinal;
+      localStorage.setItem("resultat", texteFinal);
+    }
+
+    // Effacer et recommencer
+    function resetChronique() {
+      if (confirm("Voulez-vous vraiment effacer cette chronique et recommencer ?")) {
+        fields.forEach(id => {
+          document.getElementById(id).value = "";
+          localStorage.removeItem(id);
+        });
+        document.getElementById("resultat").textContent = "";
+        localStorage.removeItem("resultat");
+      }
+    }
+
+    // Export PDF
+    async function exportPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      let texte = document.getElementById("resultat").textContent || "Aucune chronique rédigée.";
+
+      const font = document.getElementById("fontSelect").value;
+      const size = parseInt(document.getElementById("fontSize").value, 10);
+
+      doc.setFont(font, "normal");
+      doc.setFontSize(size);
+
+      const margin = 20;
+      const pageWidth = doc.internal.pageSize.getWidth() - margin * 2;
+      doc.text(texte, margin, margin, { maxWidth: pageWidth });
+
+      doc.save("chronique.pdf");
+    }
+  </script>
+</body>
+</html>

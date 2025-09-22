@@ -247,3 +247,23 @@ header {
   text-align: center;
   padding: 1rem;
 }
+
+.outil-enregistrement {
+  margin-top: 20px;
+  padding: 12px;
+  border: 2px solid #444;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  font-size: 1.1em;
+}
+
+.outil-enregistrement a {
+  font-weight: bold;
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.outil-enregistrement a:hover {
+  text-decoration: underline;
+}
+

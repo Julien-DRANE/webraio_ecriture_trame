@@ -8,7 +8,6 @@
 
   <!-- jsPDF + AutoTable depuis CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
   <!-- 🔹 Menu fixe -->
@@ -45,14 +44,13 @@
       <textarea id="intro3" rows="3"></textarea>
 
       <h2>Développement</h2>
-      <label for="arg1">Argument 1 + exemple :</label>
-      <textarea id="arg1" rows="4"></textarea>
-
-      <label for="arg2">Argument 2 + exemple :</label>
-      <textarea id="arg2" rows="4"></textarea>
-
-      <label for="arg3">Argument 3 + exemple :</label>
-      <textarea id="arg3" rows="4"></textarea>
+      <div id="dev-container">
+        <div class="dev-field">
+          <label>Argument 1 + exemple :</label>
+          <textarea rows="4"></textarea>
+        </div>
+      </div>
+      <button type="button" onclick="addArgument()">➕ Ajouter un argument</button>
 
       <h2>Conclusion</h2>
       <label for="concl1">1) Résumé avec d’autres mots :</label>
@@ -89,31 +87,27 @@
 
   <!-- 🔹 Script de gestion -->
   <script>
-    const fields = ["intro1","intro2","intro3","arg1","arg2","arg3","concl1","concl2"];
+    let argCount = 1;
 
-    // Charger les données sauvegardées
-    window.onload = function() {
-      fields.forEach(id => {
-        const saved = localStorage.getItem(id);
-        if (saved !== null) {
-          document.getElementById(id).value = saved;
-        }
-      });
+    function addArgument() {
+      argCount++;
+      const container = document.getElementById("dev-container");
 
-      const savedResult = localStorage.getItem("resultat");
-      if (savedResult !== null) {
-        document.getElementById("resultat").textContent = savedResult;
-      }
-    };
+      const div = document.createElement("div");
+      div.classList.add("dev-field");
 
-    // Sauvegarde automatique à chaque saisie
-    fields.forEach(id => {
-      document.addEventListener("input", function(e) {
-        if (e.target.id === id) {
-          localStorage.setItem(id, e.target.value);
-        }
-      });
-    });
+      div.innerHTML = `
+        <label>Argument ${argCount} + exemple :</label>
+        <textarea rows="4"></textarea>
+        <button type="button" onclick="removeArgument(this)">❌ Supprimer</button>
+      `;
+
+      container.appendChild(div);
+    }
+
+    function removeArgument(btn) {
+      btn.parentElement.remove();
+    }
 
     // Compiler et sauvegarder le texte final
     function compilerChronique() {
@@ -121,12 +115,13 @@
       const intro2 = document.getElementById("intro2").value;
       const intro3 = document.getElementById("intro3").value;
 
-      const arg1 = document.getElementById("arg1").value;
-      const arg2 = document.getElementById("arg2").value;
-      const arg3 = document.getElementById("arg3").value;
-
       const concl1 = document.getElementById("concl1").value;
       const concl2 = document.getElementById("concl2").value;
+
+      // Récupérer les arguments dynamiques
+      const args = Array.from(document.querySelectorAll("#dev-container textarea"))
+        .map((ta, i) => `Argument ${i+1} : ${ta.value || "(vide)"}`)
+        .join("\n");
 
       const texteFinal =
         "CHRONIQUE RADIO\n\n" +
@@ -135,9 +130,7 @@
         "2) " + (intro2 || "(vide)") + "\n" +
         "3) " + (intro3 || "(vide)") + "\n\n" +
         "Développement :\n" +
-        "Argument 1 : " + (arg1 || "(vide)") + "\n" +
-        "Argument 2 : " + (arg2 || "(vide)") + "\n" +
-        "Argument 3 : " + (arg3 || "(vide)") + "\n\n" +
+        args + "\n\n" +
         "Conclusion :\n" +
         "1) " + (concl1 || "(vide)") + "\n" +
         "2) " + (concl2 || "(vide)");
@@ -149,85 +142,81 @@
     // Effacer et recommencer
     function resetChronique() {
       if (confirm("Voulez-vous vraiment effacer cette chronique et recommencer ?")) {
-        fields.forEach(id => {
-          document.getElementById(id).value = "";
-          localStorage.removeItem(id);
-        });
+        document.querySelectorAll("textarea").forEach(el => el.value = "");
         document.getElementById("resultat").textContent = "";
-        localStorage.removeItem("resultat");
+        localStorage.clear();
       }
     }
 
-    // Export PDF
+    // Export PDF (version fluide sans tableau)
     async function exportPDF() {
-  const JsPDFCtor = window.jspdf?.jsPDF;
-  if (!JsPDFCtor) {
-    alert("jsPDF n'est pas chargé.");
-    return;
-  }
-
-  const doc = new JsPDFCtor({ unit: "mm", format: "a4" });
-
-  // Couleurs bleues
-  const bleuFonce = [0, 38, 84];   // #002654
-  const bleuClair = [74, 144, 226]; // #4A90E2
-
-  const margin = 20;
-  const pageWidth = doc.internal.pageSize.getWidth() - margin * 2;
-  let y = 20;
-
-  // Fonction utilitaire pour écrire un bloc multi-lignes
-  function writeBlock(text, color = [0, 0, 0], bold = false) {
-    doc.setFont("helvetica", bold ? "bold" : "normal");
-    doc.setTextColor(...color);
-    const lines = doc.splitTextToSize(text, pageWidth);
-    lines.forEach(line => {
-      if (y > doc.internal.pageSize.getHeight() - 20) {
-        doc.addPage();
-        y = 20;
+      const JsPDFCtor = window.jspdf?.jsPDF;
+      if (!JsPDFCtor) {
+        alert("jsPDF n'est pas chargé.");
+        return;
       }
-      doc.text(line, margin, y);
+
+      const doc = new JsPDFCtor({ unit: "mm", format: "a4" });
+
+      // Couleurs bleues
+      const bleuFonce = [0, 38, 84];   // #002654
+      const bleuClair = [74, 144, 226]; // #4A90E2
+
+      const margin = 20;
+      const pageWidth = doc.internal.pageSize.getWidth() - margin * 2;
+      let y = 20;
+
+      // Fonction utilitaire pour écrire un bloc multi-lignes
+      function writeBlock(text, color = [0, 0, 0], bold = false) {
+        doc.setFont("helvetica", bold ? "bold" : "normal");
+        doc.setTextColor(...color);
+        const lines = doc.splitTextToSize(text, pageWidth);
+        lines.forEach(line => {
+          if (y > doc.internal.pageSize.getHeight() - 20) {
+            doc.addPage();
+            y = 20;
+          }
+          doc.text(line, margin, y);
+          y += 6;
+        });
+        y += 2;
+      }
+
+      // === Titre principal ===
+      writeBlock("CHRONIQUE RADIO", bleuFonce, true);
       y += 6;
-    });
-    y += 2;
-  }
 
-  // === Titre principal ===
-  writeBlock("CHRONIQUE RADIO", bleuFonce, true);
-  y += 6;
+      // === Introduction ===
+      writeBlock("Introduction", bleuClair, true);
+      writeBlock("1) " + (document.getElementById("intro1").value || "(vide)"));
+      writeBlock("2) " + (document.getElementById("intro2").value || "(vide)"));
+      writeBlock("3) " + (document.getElementById("intro3").value || "(vide)"));
+      y += 4;
 
-  // === Introduction ===
-  writeBlock("Introduction", bleuClair, true);
-  writeBlock("1) " + (document.getElementById("intro1").value || "(vide)"));
-  writeBlock("2) " + (document.getElementById("intro2").value || "(vide)"));
-  writeBlock("3) " + (document.getElementById("intro3").value || "(vide)"));
-  y += 4;
+      // === Développement ===
+      writeBlock("Développement", bleuClair, true);
+      const args = Array.from(document.querySelectorAll("#dev-container textarea"))
+        .map((ta, i) => `Argument ${i+1} : ${ta.value || "(vide)"}`);
+      args.forEach(line => writeBlock(line));
+      y += 4;
 
-  // === Développement ===
-  writeBlock("Développement", bleuClair, true);
-  writeBlock("Argument 1 : " + (document.getElementById("arg1").value || "(vide)"));
-  writeBlock("Argument 2 : " + (document.getElementById("arg2").value || "(vide)"));
-  writeBlock("Argument 3 : " + (document.getElementById("arg3").value || "(vide)"));
-  y += 4;
+      // === Conclusion ===
+      writeBlock("Conclusion", bleuClair, true);
+      writeBlock("1) " + (document.getElementById("concl1").value || "(vide)"));
+      writeBlock("2) " + (document.getElementById("concl2").value || "(vide)"));
 
-  // === Conclusion ===
-  writeBlock("Conclusion", bleuClair, true);
-  writeBlock("1) " + (document.getElementById("concl1").value || "(vide)"));
-  writeBlock("2) " + (document.getElementById("concl2").value || "(vide)"));
+      // === Pied de page ===
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(10);
+        doc.setTextColor(150);
+        doc.text(`Page ${i}/${pageCount}`, doc.internal.pageSize.getWidth() - 30, doc.internal.pageSize.getHeight() - 10);
+        doc.text("Concours NON AU HARCÈLEMENT – Atelier radio", margin, doc.internal.pageSize.getHeight() - 10);
+      }
 
-  // === Pied de page ===
-  const pageCount = doc.internal.getNumberOfPages();
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i);
-    doc.setFontSize(10);
-    doc.setTextColor(150);
-    doc.text(`Page ${i}/${pageCount}`, doc.internal.pageSize.getWidth() - 30, doc.internal.pageSize.getHeight() - 10);
-    doc.text("Concours NON AU HARCÈLEMENT – Atelier radio", margin, doc.internal.pageSize.getHeight() - 10);
-  }
-
-  doc.save("chronique.pdf");
-}
-
+      doc.save("chronique.pdf");
+    }
   </script>
 </body>
 </html>

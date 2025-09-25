@@ -6,8 +6,9 @@
   <title>Trame - Rédiger une chronique radio</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- jsPDF depuis CDN -->
+  <!-- jsPDF + AutoTable depuis CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
   <!-- 🔹 Menu fixe -->
@@ -130,13 +131,16 @@
       const texteFinal =
         "CHRONIQUE RADIO\n\n" +
         "Introduction :\n" +
-        intro1 + " " + intro2 + " " + intro3 + "\n\n" +
+        "1) " + (intro1 || "(vide)") + "\n" +
+        "2) " + (intro2 || "(vide)") + "\n" +
+        "3) " + (intro3 || "(vide)") + "\n\n" +
         "Développement :\n" +
-        "- " + arg1 + "\n" +
-        "- " + arg2 + "\n" +
-        "- " + arg3 + "\n\n" +
+        "Argument 1 : " + (arg1 || "(vide)") + "\n" +
+        "Argument 2 : " + (arg2 || "(vide)") + "\n" +
+        "Argument 3 : " + (arg3 || "(vide)") + "\n\n" +
         "Conclusion :\n" +
-        concl1 + " " + concl2;
+        "1) " + (concl1 || "(vide)") + "\n" +
+        "2) " + (concl2 || "(vide)");
 
       document.getElementById("resultat").textContent = texteFinal;
       localStorage.setItem("resultat", texteFinal);
@@ -156,23 +160,74 @@
 
     // Export PDF
     async function exportPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+  const JsPDFCtor = window.jspdf?.jsPDF;
+  if (!JsPDFCtor) {
+    alert("jsPDF n'est pas chargé.");
+    return;
+  }
 
-      let texte = document.getElementById("resultat").textContent || "Aucune chronique rédigée.";
+  const doc = new JsPDFCtor({ unit: "mm", format: "a4" });
 
-      const font = document.getElementById("fontSelect").value;
-      const size = parseInt(document.getElementById("fontSize").value, 10);
+  // Couleurs bleues
+  const bleuFonce = [0, 38, 84];   // #002654
+  const bleuClair = [74, 144, 226]; // #4A90E2
 
-      doc.setFont(font, "normal");
-      doc.setFontSize(size);
+  const margin = 20;
+  const pageWidth = doc.internal.pageSize.getWidth() - margin * 2;
+  let y = 20;
 
-      const margin = 20;
-      const pageWidth = doc.internal.pageSize.getWidth() - margin * 2;
-      doc.text(texte, margin, margin, { maxWidth: pageWidth });
+  // Fonction utilitaire pour écrire un bloc multi-lignes
+  function writeBlock(text, color = [0, 0, 0], bold = false) {
+    doc.setFont("helvetica", bold ? "bold" : "normal");
+    doc.setTextColor(...color);
+    const lines = doc.splitTextToSize(text, pageWidth);
+    lines.forEach(line => {
+      if (y > doc.internal.pageSize.getHeight() - 20) {
+        doc.addPage();
+        y = 20;
+      }
+      doc.text(line, margin, y);
+      y += 6;
+    });
+    y += 2;
+  }
 
-      doc.save("chronique.pdf");
-    }
+  // === Titre principal ===
+  writeBlock("CHRONIQUE RADIO", bleuFonce, true);
+  y += 6;
+
+  // === Introduction ===
+  writeBlock("Introduction", bleuClair, true);
+  writeBlock("1) " + (document.getElementById("intro1").value || "(vide)"));
+  writeBlock("2) " + (document.getElementById("intro2").value || "(vide)"));
+  writeBlock("3) " + (document.getElementById("intro3").value || "(vide)"));
+  y += 4;
+
+  // === Développement ===
+  writeBlock("Développement", bleuClair, true);
+  writeBlock("Argument 1 : " + (document.getElementById("arg1").value || "(vide)"));
+  writeBlock("Argument 2 : " + (document.getElementById("arg2").value || "(vide)"));
+  writeBlock("Argument 3 : " + (document.getElementById("arg3").value || "(vide)"));
+  y += 4;
+
+  // === Conclusion ===
+  writeBlock("Conclusion", bleuClair, true);
+  writeBlock("1) " + (document.getElementById("concl1").value || "(vide)"));
+  writeBlock("2) " + (document.getElementById("concl2").value || "(vide)"));
+
+  // === Pied de page ===
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(10);
+    doc.setTextColor(150);
+    doc.text(`Page ${i}/${pageCount}`, doc.internal.pageSize.getWidth() - 30, doc.internal.pageSize.getHeight() - 10);
+    doc.text("Concours NON AU HARCÈLEMENT – Atelier radio", margin, doc.internal.pageSize.getHeight() - 10);
+  }
+
+  doc.save("chronique.pdf");
+}
+
   </script>
 </body>
 </html>

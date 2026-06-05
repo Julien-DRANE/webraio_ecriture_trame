@@ -1,769 +1,113 @@
-﻿<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Outil évolutif de création d'ingénierie de formation et de slides avec taxonomie de Bloom et principes cognitifs."
-    />
-    <title>Studio Ingénierie Formation</title>
-    <link rel="icon" type="image/png" href="assets/images/icon.png" />
-    <link rel="stylesheet" href="styles/base.css" />
-    <link rel="stylesheet" href="styles/layout.css" />
-    <link rel="stylesheet" href="styles/components.css" />
-    <link rel="stylesheet" href="styles/slide.css" />
-    <script defer src="src/app/data/bloom-levels.js"></script>
-    <script defer src="src/app/data/cognitive-principles.js"></script>
-    <script defer src="src/app/data/color-palettes.js"></script>
-    <script defer src="src/app/data/font-options.js"></script>
-    <script defer src="src/app/data/picto-assets.js"></script>
-    <script defer src="src/app/state/default-state.js"></script>
-    <script defer src="src/app/utils/helpers.js"></script>
-    <script defer src="src/app/services/storage-service.js"></script>
-    <script defer src="src/app/services/media-service.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
-    <script defer src="src/app/ui/slide-markup.js"></script>
-    <script defer src="src/app/ui/render-dashboard.js"></script>
-    <script defer src="src/app/services/export-service.js"></script>
-    <script defer src="src/app/services/presenter-service.js"></script>
-    <script defer src="src/app/services/pptx-native-export-service.js"></script>
-    <script defer src="src/app/main.js"></script>
-  </head>
-  <body>
-    <div class="app-shell">
-      <header class="topbar">
-        <div class="brand-block">
-          <div class="brand-mark">IF</div>
-          <div>
-            <p class="brand-kicker">Arborescence évolutive</p>
-            <h1>Studio Ingénierie Formation</h1>
-            <p class="topbar-subtitle">
-              Création de slides et structuration d'un parcours au regard de Bloom et des principes cognitifs.
-            </p>
-          </div>
-        </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiche méthodologique - Chronique radio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 🔹 Menu fixe -->
+  <nav class="navbar">
+    <a href="index.html">🏠 Accueil</a>
+    <a href="trame.html">✍️ Trame</a>
+    <a href="annexe.html">📑 Annexe</a>
+  </nav>
 
-        <div class="topbar-actions">
-          <button id="generate-bloom-deck" class="button button-primary" type="button" data-view="engineering">Structure Bloom x6</button>
-          <div class="add-slide-group" data-view="presentation">
-            <button id="add-slide" class="button button-soft" type="button" aria-haspopup="true" aria-expanded="false">Nouvelle slide</button>
-            <div id="add-slide-menu" class="add-slide-menu" hidden></div>
-          </div>
-          <button id="undo-action" class="button button-soft" type="button" data-view="presentation" aria-label="Annuler la dernière action" title="Annuler la dernière action">↶ Undo</button>
-          <button id="duplicate-slide" class="button button-soft" type="button" data-view="presentation">Dupliquer</button>
-          <button id="copy-slide" class="button button-soft" type="button" data-view="presentation">Copier la slide</button>
-          <button id="paste-slide" class="button button-soft" type="button" data-view="presentation">Coller</button>
-          <button id="delete-slide" class="button button-soft" type="button" data-view="presentation">Supprimer</button>
-          <button id="open-presentation" class="button button-soft" type="button" data-view="presentation">Présenter</button>
-          <button id="open-presentation-active" class="button button-soft" type="button" data-view="presentation">Présenter depuis la slide active</button>
-          <button id="open-presenter" class="button button-soft" type="button" data-view="presentation">Mode présentateur</button>
-          <button id="open-presenter-active" class="button button-soft" type="button" data-view="presentation">Présentateur depuis la slide active</button>
-          <button id="export-pdf" class="button button-soft" type="button" data-view="presentation">Exporter PDF</button>
-          <button id="export-pptx" class="button button-soft" type="button" data-view="presentation">Exporter PPTX</button>
-          <button id="export-html" class="button button-dark" type="button" data-view="presentation">Exporter HTML</button>
-        </div>
-      </header>
+  <header>
+    <h1>Fiche méthodologique</h1>
+    <h2>Écrire une chronique radio</h2>
+  </header>
 
-      <nav class="app-tabs" aria-label="Phases de création">
-        <button id="tab-engineering" class="app-tab" type="button" data-switch-view="engineering" aria-pressed="true">
-          Ingénierie de formation
-        </button>
-        <button id="tab-presentation" class="app-tab" type="button" data-switch-view="presentation" aria-pressed="false">
-          Création de la présentation
-        </button>
-      </nav>
+  <main>
+    <section>
+      <h2>Pourquoi écrire pour la radio ?</h2>
+      <p>
+        Aussi étonnant que cela puisse paraître, à la radio, on écrit ses textes.
+        L’improvisation a peu de place : une chronique doit être préparée, claire et efficace.
+      </p>
+    </section>
 
-      <main class="workspace">
-        <aside class="sidebar">
-          <section class="panel" data-view="presentation">
-            <div class="panel-heading">
-              <div>
-                <p class="panel-kicker">Cadre global</p>
-                <h2>Présentation</h2>
-              </div>
-              <div class="panel-heading-actions">
-                <input id="import-json-input" class="media-upload-input" type="file" accept=".json,application/json" />
-                <button id="toggle-global-panel" class="button button-soft" type="button" aria-expanded="true">Replier</button>
-                <button id="toggle-night-mode" class="button button-soft" type="button" aria-pressed="false">Mode nuit</button>
-                <button id="import-json" class="button button-ghost" type="button">Importer JSON</button>
-                <button id="export-json" class="button button-ghost" type="button">Exporter JSON</button>
-                <button id="export-txt" class="button button-ghost" type="button">Exporter TXT</button>
-              </div>
-            </div>
-            <div id="global-panel-body">
-              <div class="form-grid">
-              <label>
-                Titre du diaporama
-                <input id="deck-title" type="text" maxlength="60" />
-              </label>
-              <label>
-                Sous-titre
-                <input id="deck-subtitle" type="text" maxlength="90" />
-              </label>
-              <label>
-                Signature
-                <input id="deck-footer" type="text" maxlength="50" />
-              </label>
-              <label>
-                Habillage
-                <select id="deck-theme">
-                  <option value="random">Mixte aléatoire</option>
-                  <option value="mix">Ronds bleus + vagues</option>
-                  <option value="circles">Ronds bleus</option>
-                  <option value="waves">Vagues</option>
-                  <option value="clean">Minimal</option>
-                </select>
-              </label>
-              <label>
-                Palette
-                <select id="deck-palette"></select>
-              </label>
-              <label>
-                Typo
-                <select id="deck-font"></select>
-              </label>
-              <label>
-                Taille des textes
-                <input id="deck-content-font-scale" type="range" min="85" max="140" step="5" />
-                <span id="deck-content-font-scale-value" class="field-meta">100 %</span>
-              </label>
-              <label>
-                Transition
-                <select id="deck-transition">
-                  <option value="fade">Fondu</option>
-                  <option value="slide">Glissement</option>
-                  <option value="zoom">Zoom</option>
-                  <option value="rise">Montée</option>
-                  <option value="none">Aucune</option>
-                </select>
-              </label>
-              <label class="checkbox-field">
-                <input id="deck-frame-shadow" type="checkbox" />
-                <span>Ombre légère sous les cadres</span>
-              </label>
-            </div>
+    <section>
+      <h2>Questions à se poser</h2>
+      <ul>
+        <li>Pour qui est-ce que j’écris ?</li>
+        <li>Quel est le sujet ? (Qui ? Quoi ? Où ? Pourquoi ?)</li>
+        <li>Quel angle adopter ? (critique, descriptif, humoristique...)</li>
+        <li>Quel ton employer ? (neutre, satirique, indigné...)</li>
+      </ul>
+    </section>
 
-            <div class="guidance">
-              <p class="guidance-title">Règles de production</p>
-              <ul>
-                <li>1 idée principale par slide</li>
-                <li>3 points maximum</li>
-                <li>1 note finale courte</li>
-                <li>1 niveau Bloom principal par slide</li>
-                <li>Réglage de taille appliqué hors titres et hors mode canvas</li>
-              </ul>
-            </div>
-          </section>
+    <section>
+      <h2>La marche à suivre</h2>
+      <ol>
+        <li>Répondre aux cinq questions fondamentales (5W : Qui, Où, Quand, Quoi, Pourquoi)</li>
+        <li>Dégager une problématique claire</li>
+        <li>Rechercher et trier les informations essentielles</li>
+        <li>Classer les idées et préparer un plan (introduction, développement, conclusion)</li>
+        <li>Compléter le plan et rédiger</li>
+      </ol>
+    </section>
 
-          <section class="panel" data-view="engineering">
-            <div class="panel-heading">
-              <div>
-                <p class="panel-kicker">Taxonomie de Bloom</p>
-                <h2>Parcours x6</h2>
-              </div>
-              <span id="taxonomy-count" class="count-pill"></span>
-            </div>
+    <section>
+      <h2>Conseils de rédaction</h2>
+      <ul>
+        <li>Adopter un style parlé</li>
+        <li>Utiliser des phrases courtes et simples</li>
+        <li>Choisir des mots concrets</li>
+        <li>Employer des mots de liaison pour relier les idées</li>
+        <li>Écrire au présent ou au passé composé</li>
+        <li>Impliquer l’auditeur avec des questions ou exclamations</li>
+        <li>Soigner l’attaque (1ère phrase) et la chute (dernière phrase)</li>
+      </ul>
+    </section>
 
-            <div id="taxonomy-roadmap" class="taxonomy-roadmap"></div>
-          </section>
+    <section>
+      <h2>🎧 Les trucs des pros</h2>
+      <h3>ZEN : prendre confiance</h3>
+      <ul>
+        <li>S’enraciner : avoir toujours un pied au sol</li>
+        <li>Se tenir droit</li>
+        <li>Respiration ventrale avant de parler</li>
+      </ul>
+      <h3>RESPIRE : réguler son débit</h3>
+      <ul>
+        <li>Respirer naturellement pour mettre l’auditoire à l’aise</li>
+        <li>Faire des pauses calculées</li>
+        <li>Prendre le temps : une hésitation → pause → reprise</li>
+      </ul>
+      <h3>EYE CONTACT : capter l’auditoire</h3>
+      <ul>
+        <li>Lever les yeux de temps en temps, vérifier les signaux</li>
+        <li>Regarder les auditeurs pour ajuster son discours</li>
+        <li>En interview, le regard est primordial</li>
+      </ul>
+      <h3>PEP’S : dynamiser son texte</h3>
+      <ul>
+        <li>Ponctuer beaucoup pour éviter la monotonie</li>
+        <li>Surligner les mots-clés pour les accentuer</li>
+        <li>Modifier les passages difficiles à lire</li>
+      </ul>
+      <h3>CLAIR : articuler</h3>
+      <ul>
+        <li>S’exercer avec un crayon entre les dents</li>
+        <li>Lire des virelangues pour s’entraîner</li>
+      </ul>
+      <h3>TEKNIK : préparer l’enregistrement</h3>
+      <ul>
+        <li>Vérifier les niveaux sonores avec la technicienne</li>
+        <li>Tenir la feuille derrière le micro, pas à côté</li>
+        <li>Éviter les bruits de feuille (préférer tablette, bristols)</li>
+      </ul>
+    </section>
 
-          <section class="panel">
-            <div class="panel-heading">
-              <div>
-                <p class="panel-kicker">Slides</p>
-                <h2>Séquence</h2>
-              </div>
-              <span id="slide-count" class="count-pill"></span>
-            </div>
-
-            <div id="slide-list" class="slide-list" aria-label="Liste des slides"></div>
-          </section>
-        </aside>
-
-        <section class="editor-column">
-          <section class="panel" data-view="engineering">
-            <div class="panel-heading">
-              <div>
-                <p class="panel-kicker">Scénario pédagogique</p>
-                <h2>Bloom et preuves</h2>
-              </div>
-              <div id="density-badge" class="density-badge"></div>
-            </div>
-
-            <div class="editor-form">
-              <div class="form-grid">
-                <label>
-                  Niveau Bloom
-                  <select id="slide-bloom-level"></select>
-                </label>
-                <label>
-                  Étiquette
-                  <input id="slide-label" type="text" maxlength="24" />
-                </label>
-              </div>
-
-              <label>
-                Objectif d'apprentissage
-                <textarea id="slide-objective" rows="3" maxlength="180"></textarea>
-                <span id="objective-meta" class="field-meta"></span>
-              </label>
-
-              <div class="form-grid">
-                <label>
-                  Trace attendue
-                  <input id="slide-evidence" type="text" maxlength="120" />
-                  <span id="evidence-meta" class="field-meta"></span>
-                </label>
-                <label>
-                  Numéro visible
-                  <input id="slide-number" type="text" maxlength="8" />
-                </label>
-              </div>
-            </div>
-          </section>
-
-          <section class="panel" data-view="engineering">
-            <div class="panel-heading">
-              <div>
-                <p class="panel-kicker">Principes cognitifs</p>
-                <h2>Activation par slide</h2>
-              </div>
-            </div>
-
-            <div id="principles-list" class="principles-list"></div>
-          </section>
-
-          <section class="panel" data-view="presentation">
-            <div class="panel-heading">
-              <div>
-                <p class="panel-kicker">Contenu de slide</p>
-                <h2>Modèle</h2>
-              </div>
-              <button id="delete-slide-inline" class="icon-button icon-button-danger" type="button" aria-label="Supprimer la slide">
-                x
-              </button>
-            </div>
-
-            <form id="slide-form" class="editor-form">
-              <label>
-                Titre
-                <input id="slide-title" type="text" maxlength="72" />
-                <span id="title-meta" class="field-meta"></span>
-              </label>
-
-              <label>
-                Sous-titre
-                <textarea id="slide-subtitle" rows="3" maxlength="170"></textarea>
-                <span id="subtitle-meta" class="field-meta"></span>
-              </label>
-
-              <div class="form-grid">
-                <label>
-                  Type de contenu
-                  <select id="slide-content-type">
-                    <option value="bullets">Points</option>
-                    <option value="table">Tableau</option>
-                    <option value="free">Zone de texte libre</option>
-                    <option value="visual">Histogramme</option>
-                    <option value="canvas">Canvas libre</option>
-                  </select>
-                </label>
-                <label>
-                  Palette de la slide
-                  <select id="slide-palette-override"></select>
-                  <span class="field-label-secondary">Teinte decorative</span>
-                  <select id="slide-decorative-accent-override"></select>
-                </label>
-                <label class="checkbox-field">
-                  <input id="slide-decorative-accent-solid" type="checkbox" />
-                  <span>Habillage décoratif plus marqué</span>
-                </label>
-              </div>
-
-              <div id="slide-bullets-editor" class="slide-content-mode">
-              <label class="inline-checkbox">
-                <input id="slide-bullets-numbered" type="checkbox" />
-                <span>Numéroter les points</span>
-              </label>
-              <label class="inline-checkbox">
-                <input id="slide-bullets-progressive" type="checkbox" />
-                <span>Révéler les points en présentation</span>
-              </label>
-              <label class="inline-checkbox">
-                <input id="slide-bullets-sub-progressive" type="checkbox" />
-                <span>Révéler les sous-points</span>
-              </label>
-              <div class="bullet-grid">
-                <div class="bullet-field">
-                  <label for="slide-bullet-1">Point 1</label>
-                  <div class="bullet-editor-row" data-bullet-row="0">
-                    <button class="bullet-drag-handle" type="button" draggable="true" data-bullet-drag-handle="0" aria-label="Glisser le point 1" title="Glisser pour réordonner">
-                      ::
-                    </button>
-                    <input id="slide-bullet-1" type="text" maxlength="220" />
-                  </div>
-                  <div id="sub-bullets-0" class="sub-bullets-editor"></div>
-                </div>
-                <div class="bullet-field">
-                  <label for="slide-bullet-2">Point 2</label>
-                  <div class="bullet-editor-row" data-bullet-row="1">
-                    <button class="bullet-drag-handle" type="button" draggable="true" data-bullet-drag-handle="1" aria-label="Glisser le point 2" title="Glisser pour réordonner">
-                      ::
-                    </button>
-                    <input id="slide-bullet-2" type="text" maxlength="220" />
-                  </div>
-                  <div id="sub-bullets-1" class="sub-bullets-editor"></div>
-                </div>
-                <div class="bullet-field">
-                  <label for="slide-bullet-3">Point 3</label>
-                  <div class="bullet-editor-row" data-bullet-row="2">
-                    <button class="bullet-drag-handle" type="button" draggable="true" data-bullet-drag-handle="2" aria-label="Glisser le point 3" title="Glisser pour réordonner">
-                      ::
-                    </button>
-                    <input id="slide-bullet-3" type="text" maxlength="220" />
-                  </div>
-                  <div id="sub-bullets-2" class="sub-bullets-editor"></div>
-                </div>
-              </div>
-
-              <div class="extra-bullets-panel">
-                <div class="extra-bullets-header">
-                  <span>Points supplémentaires</span>
-                  <button id="add-bullet" class="button button-ghost" type="button">Ajouter un point</button>
-                </div>
-                <div id="extra-bullets-list" class="extra-bullets-list"></div>
-              </div>
-              </div>
-
-              <div id="slide-table-editor" class="slide-content-mode" hidden>
-                <div class="table-controls">
-                  <button id="add-table-row" class="button button-ghost" type="button">Ajouter une ligne</button>
-                  <button id="remove-table-row" class="button button-soft" type="button">Retirer une ligne</button>
-                  <button id="add-table-column" class="button button-ghost" type="button">Ajouter une colonne</button>
-                  <button id="remove-table-column" class="button button-soft" type="button">Retirer une colonne</button>
-                </div>
-                <label class="inline-checkbox">
-                  <input id="slide-table-progressive" type="checkbox" />
-                  <span>Révéler les cases du tableau</span>
-                </label>
-                <label id="slide-table-progressive-order-wrap">
-                  Ordre de révélation
-                  <select id="slide-table-progressive-order">
-                    <option value="row">Ligne par ligne</option>
-                    <option value="column">Colonne par colonne</option>
-                  </select>
-                </label>
-                <div class="table-fill-panel">
-                  <div class="table-fill-header">
-                    <span>Remplissage couleur</span>
-                  </div>
-                  <div class="table-fill-controls">
-                    <select id="table-fill-target">
-                      <option value="row">Ligne</option>
-                      <option value="column">Colonne</option>
-                      <option value="cell">Cellule sélectionnée</option>
-                    </select>
-                    <select id="table-fill-index"></select>
-                    <input id="table-fill-color" type="color" value="#dcecff" aria-label="Couleur de remplissage du tableau" />
-                    <button id="add-table-fill" class="button button-soft" type="button">Appliquer</button>
-                  </div>
-                  <div id="table-fill-list" class="table-fill-list"></div>
-                </div>
-                <div id="table-editor-grid" class="table-editor-grid"></div>
-              </div>
-
-              <div id="slide-free-editor" class="slide-content-mode" hidden>
-                <div class="free-editor-field">
-                  <span class="free-editor-label">Texte libre</span>
-                  <div class="free-editor-shell">
-                    <div class="free-editor-toolbar">
-                      <button class="button button-ghost free-editor-action" type="button" data-free-command="bold"><strong>G</strong></button>
-                      <button class="button button-ghost free-editor-action" type="button" data-free-command="italic"><em>I</em></button>
-                      <button class="button button-ghost free-editor-action" type="button" data-free-command="underline"><u>S</u></button>
-                      <button class="button button-ghost free-editor-action" type="button" data-free-command="two-columns" aria-label="Passer la selection sur deux colonnes">2 col.</button>
-                      <button id="free-text-bullets" class="button button-ghost free-editor-action" type="button" aria-label="Afficher des puces">Puces</button>
-                      <label class="free-editor-color-control">
-                        <span>Couleur</span>
-                        <input id="free-text-color" type="color" value="#1d1917" aria-label="Couleur du texte sélectionné" />
-                      </label>
-                      <label class="free-editor-size-control">
-                        <span>Taille</span>
-                        <select id="free-text-size" aria-label="Taille du texte sélectionné">
-                          <option value="8">8 px</option>
-                          <option value="10">10 px</option>
-                          <option value="12">12 px</option>
-                          <option value="14">14 px</option>
-                          <option value="16">16 px</option>
-                          <option value="18">18 px</option>
-                          <option value="20">20 px</option>
-                          <option value="24">24 px</option>
-                          <option value="28">28 px</option>
-                          <option value="32">32 px</option>
-                          <option value="40">40 px</option>
-                          <option value="48">48 px</option>
-                        </select>
-                      </label>
-                    </div>
-                    <div id="slide-free-body" class="free-editor" contenteditable="true"></div>
-                  </div>
-                  <span id="free-body-meta" class="field-meta"></span>
-                </div>
-
-                <div class="free-links-panel">
-                  <div class="extra-bullets-header">
-                    <span>Liens cliquables</span>
-                  </div>
-                  <div class="media-link-row">
-                    <input id="free-link-label" type="text" maxlength="80" placeholder="Libellé du lien" />
-                    <input id="free-link-url" type="url" maxlength="500" placeholder="https://..." />
-                    <button id="add-free-link" class="button button-soft" type="button">Ajouter</button>
-                  </div>
-                  <div id="free-links-list" class="free-links-list"></div>
-                </div>
-              </div>
-
-              <div id="slide-canvas-editor" class="slide-content-mode" hidden>
-                <div class="canvas-editor-toolbar">
-                  <button id="canvas-add-text" class="button button-ghost" type="button">Ajouter un texte</button>
-                  <button id="canvas-add-arrow" class="button button-ghost" type="button">Ajouter une flèche</button>
-                  <button id="canvas-add-circle" class="button button-ghost" type="button">Cercle</button>
-                  <button id="canvas-add-square" class="button button-ghost" type="button">Carré</button>
-                  <button id="canvas-add-bubble" class="button button-ghost" type="button">Bulle</button>
-                </div>
-                <label class="checkbox-field">
-                  <input id="canvas-progressive" type="checkbox" />
-                  <span>Révéler les éléments un par un</span>
-                </label>
-                <p class="canvas-editor-hint">Clique un media dans la mediathèque pour l'ajouter sur la slide, puis deplace-le directement dans l'aperçu.</p>
-                <div id="canvas-elements-list" class="canvas-elements-list"></div>
-                <div id="canvas-element-fields" class="canvas-editor-selection" hidden>
-                  <div class="canvas-editor-grid">
-                    <label>
-                      X
-                      <input id="canvas-element-x" type="number" min="0" max="100" step="0.5" />
-                    </label>
-                    <label>
-                      Y
-                      <input id="canvas-element-y" type="number" min="-14" max="100" step="0.5" />
-                    </label>
-                    <label>
-                      Largeur
-                      <input id="canvas-element-w" type="number" min="6" max="100" step="0.5" />
-                    </label>
-                    <label>
-                      Hauteur
-                      <input id="canvas-element-h" type="number" min="6" max="100" step="0.5" />
-                    </label>
-                  </div>
-
-                  <div id="canvas-text-content-wrap" class="free-editor-field canvas-text-field">
-                    <span class="free-editor-label">Texte</span>
-                    <div class="free-editor-shell">
-                      <div id="canvas-text-toolbar" class="free-editor-toolbar canvas-text-toolbar">
-                        <button id="canvas-text-bold" class="button button-ghost canvas-text-action" type="button" aria-pressed="false" aria-label="Mettre le texte en gras"><strong>G</strong></button>
-                        <button id="canvas-text-italic" class="button button-ghost canvas-text-action" type="button" aria-pressed="false" aria-label="Mettre le texte en italique"><em>I</em></button>
-                        <button id="canvas-text-underline" class="button button-ghost canvas-text-action" type="button" aria-pressed="false" aria-label="Souligner le texte"><u>S</u></button>
-                        <button id="canvas-text-bullets" class="button button-ghost canvas-text-action" type="button" aria-pressed="false" aria-label="Afficher des puces">Puces</button>
-                        <div id="canvas-text-color-palette" class="canvas-text-color-palette" aria-label="Couleur du texte sélectionné">
-                          <span class="canvas-text-color-label">Couleur</span>
-                          <button class="canvas-text-color-swatch is-active" type="button" data-canvas-text-color-value="#1d1917" aria-label="Noir doux" title="Noir doux" style="--swatch-color:#1d1917;"></button>
-                          <button class="canvas-text-color-swatch" type="button" data-canvas-text-color-value="#0a66ff" aria-label="Bleu vif" title="Bleu vif" style="--swatch-color:#0a66ff;"></button>
-                          <button class="canvas-text-color-swatch" type="button" data-canvas-text-color-value="#0c6291" aria-label="Bleu profond" title="Bleu profond" style="--swatch-color:#0c6291;"></button>
-                          <button class="canvas-text-color-swatch" type="button" data-canvas-text-color-value="#b42318" aria-label="Rouge" title="Rouge" style="--swatch-color:#b42318;"></button>
-                          <button class="canvas-text-color-swatch" type="button" data-canvas-text-color-value="#027a48" aria-label="Vert" title="Vert" style="--swatch-color:#027a48;"></button>
-                          <button class="canvas-text-color-swatch" type="button" data-canvas-text-color-value="#b54708" aria-label="Orange" title="Orange" style="--swatch-color:#b54708;"></button>
-                          <button class="canvas-text-color-swatch" type="button" data-canvas-text-color-value="#7a5af8" aria-label="Violet" title="Violet" style="--swatch-color:#7a5af8;"></button>
-                          <button class="canvas-text-color-swatch" type="button" data-canvas-text-color-value="#998da0" aria-label="Taupe" title="Taupe" style="--swatch-color:#998da0;"></button>
-                        </div>
-                      </div>
-                      <div id="canvas-text-content" class="free-editor canvas-text-editor" contenteditable="true"></div>
-                    </div>
-                  </div>
-
-                  <div id="canvas-text-style-grid" class="canvas-editor-grid canvas-editor-grid-tight">
-                    <label>
-                      Typographie
-                      <select id="canvas-text-font"></select>
-                    </label>
-                    <label>
-                      Taille du texte
-                      <div class="range-field">
-                        <input id="canvas-text-size" type="range" min="16" max="72" step="1" value="28" />
-                        <span id="canvas-text-size-value" class="range-field-value">28 px</span>
-                      </div>
-                    </label>
-                    <label class="checkbox-field">
-                      <input id="canvas-text-frame" type="checkbox" checked />
-                      <span>Afficher le cartouche blanc</span>
-                    </label>
-                  </div>
-
-                  <label id="canvas-image-media-wrap">
-                    Media
-                    <select id="canvas-image-media"></select>
-                  </label>
-
-                  <div id="canvas-arrow-controls" class="canvas-editor-grid canvas-editor-grid-tight">
-                    <label>
-                      Direction
-                      <select id="canvas-arrow-direction">
-                        <option value="right">Vers la droite</option>
-                        <option value="left">Vers la gauche</option>
-                        <option value="up">Vers le haut</option>
-                        <option value="down">Vers le bas</option>
-                      </select>
-                    </label>
-                    <label>
-                      Couleur
-                      <input id="canvas-arrow-color" type="color" value="#0a66ff" />
-                    </label>
-                    <label>
-                      Rotation
-                      <input id="canvas-arrow-rotation" type="number" min="-360" max="360" step="1" value="0" />
-                    </label>
-                    <label>
-                      Longueur
-                      <div class="range-field">
-                        <input id="canvas-arrow-length" type="range" min="40" max="800" step="1" value="100" />
-                        <span id="canvas-arrow-length-value" class="range-field-value">100 %</span>
-                      </div>
-                    </label>
-                  </div>
-
-                  <div id="canvas-shape-controls" class="canvas-editor-grid canvas-editor-grid-tight" hidden>
-                    <label>
-                      Forme
-                      <select id="canvas-shape-kind">
-                        <option value="circle">Cercle</option>
-                        <option value="square">Carré</option>
-                        <option value="bubble">Bulle</option>
-                      </select>
-                    </label>
-                    <label>
-                      Couleur
-                      <input id="canvas-shape-color" type="color" value="#0a66ff" />
-                    </label>
-                  </div>
-
-                  <div class="canvas-element-selection-actions">
-                    <button id="canvas-duplicate-element" class="button button-ghost" type="button">Dupliquer l'élément sélectionné</button>
-                    <button id="canvas-delete-element" class="button button-soft" type="button">Supprimer l'élément sélectionné</button>
-                  </div>
-                </div>
-                <p id="canvas-empty-selection" class="extra-bullets-empty">Sélectionne un élément sur la slide pour régler sa position, sa taille ou son contenu.</p>
-              </div>
-
-              <div id="slide-visual-editor" class="slide-content-mode" hidden>
-                <div class="visual-editor-grid">
-                  <label>
-                    Media principal
-                    <select id="visual-primary-media"></select>
-                  </label>
-                  <label>
-                    Media secondaire
-                    <select id="visual-secondary-media"></select>
-                  </label>
-                </div>
-
-                <div class="visual-editor-grid visual-editor-grid-tight">
-                  <label class="checkbox-field">
-                    <input id="visual-show-images" type="checkbox" checked />
-                    <span>Afficher les medias</span>
-                  </label>
-                  <label class="checkbox-field">
-                    <input id="visual-primary-media-reveal" type="checkbox" />
-                    <span>Reveler le media principal</span>
-                  </label>
-                  <label class="checkbox-field">
-                    <input id="visual-secondary-media-reveal" type="checkbox" />
-                    <span>Reveler le media secondaire</span>
-                  </label>
-                </div>
-
-                <label class="checkbox-field">
-                  <input id="visual-show-body" type="checkbox" checked />
-                  <span>Afficher le texte d'accompagnement</span>
-                </label>
-                <label>
-                  Texte d'accompagnement
-                  <textarea id="visual-body" rows="4" maxlength="320"></textarea>
-                  <span id="visual-body-meta" class="field-meta"></span>
-                </label>
-                <label class="checkbox-field">
-                  <input id="visual-show-callout" type="checkbox" checked />
-                  <span>Afficher le texte mis en évidence</span>
-                </label>
-                <label>
-                  Texte mis en évidence
-                  <textarea id="visual-callout" rows="3" maxlength="180"></textarea>
-                  <span id="visual-callout-meta" class="field-meta"></span>
-                </label>
-
-                <label class="checkbox-field">
-                  <input id="visual-show-chart" type="checkbox" checked />
-                  <span>Afficher le mini graphe</span>
-                </label>
-
-                <div id="visual-chart-editor" class="visual-chart-editor">
-                  <div class="extra-bullets-header">
-                    <span>Mini graphe</span>
-                  </div>
-
-                  <label class="checkbox-field">
-                    <input id="visual-chart-reveal" type="checkbox" />
-                    <span>Révéler le mini graphe</span>
-                  </label>
-
-                  <label>
-                    Titre du graphe
-                    <input id="visual-chart-title" type="text" maxlength="48" />
-                  </label>
-
-                  <div id="visual-chart-bars" class="visual-chart-bars"></div>
-                  <div class="visual-chart-actions">
-                    <button id="visual-chart-add-column" class="button button-soft" type="button">Ajouter une colonne</button>
-                    <button id="visual-chart-remove-column" class="button button-ghost" type="button">Retirer la dernière</button>
-                  </div>
-                </div>
-              </div>
-
-              <div id="slide-note-editor" class="slide-content-mode">
-              <label>
-                Note de fermeture
-                <input id="slide-note" type="text" maxlength="180" />
-                <span id="note-meta" class="field-meta"></span>
-              </label>
-              </div>
-
-              <div id="slide-presenter-notes-editor" class="slide-content-mode">
-              <label>
-                Notes présentateur
-                <textarea id="slide-presenter-notes" rows="6" maxlength="2000" placeholder="Commentaires privés pour l'intervenant. Ces notes n'apparaissent jamais sur la slide projetée."></textarea>
-                <span id="presenter-notes-meta" class="field-meta"></span>
-              </label>
-              </div>
-
-              <div class="slide-media-panel">
-                <div class="slide-media-header">
-                  <div>
-                    <p class="panel-kicker">Media</p>
-                    <h3>Zone graphique constante</h3>
-                  </div>
-                  <div class="slide-media-actions">
-                    <button id="toggle-media-panel" class="button button-soft" type="button" aria-expanded="true">Replier</button>
-                    <input
-                      id="media-upload"
-                      class="media-upload-input"
-                      type="file"
-                      accept=".png,.jpg,.jpeg,.gif,.webp,.svg,.mp4,.mov,.mkv,.webm,.avi,image/*,video/*"
-                      multiple
-                    />
-                    <button id="media-upload-trigger" class="button button-ghost" type="button">Importer</button>
-                    <button id="clear-slide-media" class="button button-soft" type="button">Retirer</button>
-                  </div>
-                </div>
-
-                <div id="slide-media-panel-body" class="slide-media-panel-body">
-                  <div class="media-link-row">
-                    <input id="media-link-input" type="text" placeholder="Coller un lien image, video ou embed iframe" />
-                    <button id="media-link-add" class="button button-soft" type="button">Ajouter le media</button>
-                  </div>
-
-                  <p id="media-link-feedback" class="field-meta"></p>
-                  <p id="slide-media-selection" class="preview-hint"></p>
-                  <div id="media-library" class="media-library" aria-label="Bibliothèque média"></div>
-                  <div class="picto-panel">
-                    <div class="picto-panel-header">
-                      <div>
-                        <p class="panel-kicker">Pictos</p>
-                        <h3>Overlay dynamique</h3>
-                      </div>
-                      <div class="picto-panel-controls">
-                        <label>
-                          Placement
-                          <select id="picto-placement">
-                            <option value="title-right">Près du titre</option>
-                            <option value="top-right">Coin haut droit</option>
-                            <option value="top-left">Coin haut gauche</option>
-                            <option value="middle-right">Milieu droit</option>
-                            <option value="bullet-side">Près des points</option>
-                            <option value="bottom-right">Coin bas droit</option>
-                            <option value="bottom-left">Coin bas gauche</option>
-                            <option value="center">Centre</option>
-                          </select>
-                        </label>
-                        <label>
-                          Taille
-                          <select id="picto-size">
-                            <option value="sm">Petite</option>
-                            <option value="md" selected>Moyenne</option>
-                            <option value="lg">Grande</option>
-                          </select>
-                        </label>
-                      </div>
-                    </div>
-                    <p class="canvas-editor-hint">Clique un picto pour l’ajouter à la slide active, puis déplace-le librement dans l’aperçu.</p>
-                    <div id="picto-library" class="picto-library" aria-label="Bibliothèque de pictos"></div>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </section>
-
-          <section id="preview-panel" class="panel preview-panel" data-view="presentation" tabindex="-1">
-            <div class="panel-heading">
-              <div>
-                <p class="panel-kicker">Aperçu</p>
-                <h2>Slide active</h2>
-              </div>
-              <div class="panel-heading-actions">
-                <p id="slide-hint" class="preview-hint"></p>
-                <button id="toggle-canvas-preview-fullscreen" class="button button-soft" type="button" aria-pressed="false" hidden>Éditer en plein écran</button>
-              </div>
-            </div>
-
-            <div class="stage-wrap">
-              <div id="stage" class="stage"></div>
-              <div
-                id="presentation-progress"
-                class="presentation-progress"
-                aria-label="Progression de la présentation"
-              ></div>
-            </div>
-
-            <div id="pedagogy-brief" class="pedagogy-brief"></div>
-          </section>
-
-          <section class="panel" data-view="presentation">
-            <div class="panel-heading">
-              <div>
-                <p class="panel-kicker">Vue d'ensemble</p>
-                <h2>Miniatures</h2>
-              </div>
-              <div class="panel-heading-actions">
-                <button id="toggle-thumb-strip" class="button button-soft" type="button" aria-expanded="true">Replier</button>
-              </div>
-            </div>
-            <div id="thumb-strip" class="thumb-strip"></div>
-          </section>
-        </section>
-      </main>
-    </div>
-    <div class="chart-lightbox" id="chart-lightbox" aria-hidden="true">
-      <div class="chart-lightbox-frame">
-        <button class="chart-lightbox-close" type="button" id="chart-lightbox-close" aria-label="Fermer le graphique">×</button>
-        <div class="chart-lightbox-content" id="chart-lightbox-content"></div>
-      </div>
-    </div>
-    <div class="table-lightbox" id="table-lightbox" aria-hidden="true">
-      <div class="table-lightbox-frame">
-        <button class="table-lightbox-close" type="button" id="table-lightbox-close" aria-label="Fermer le tableau">×</button>
-        <div class="table-lightbox-content" id="table-lightbox-content"></div>
-      </div>
-    </div>
-  </body>
+    <section class="cta">
+      <h2>📑 Prêt à écrire ta chronique ?</h2>
+      <p>
+        Passe à la <strong>trame guidée</strong> pour rédiger pas à pas ton introduction, ton développement et ta conclusion.
+      </p>
+      <a href="trame.html" class="btn">✍️ Accéder à la trame</a>
+    </section>
+  </main>
+</body>
 </html>
-

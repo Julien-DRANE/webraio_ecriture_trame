@@ -1,0 +1,210 @@
+.app-shell {
+  width: min(1480px, calc(100vw - 2rem));
+  margin: 1rem auto;
+  padding-bottom: 1rem;
+}
+
+.topbar,
+.panel {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+}
+
+.topbar {
+  position: relative;
+  z-index: 50;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.15rem;
+  border-radius: var(--radius-xl);
+  overflow: visible;
+}
+
+.brand-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 390px minmax(0, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.app-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.sidebar,
+.editor-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.panel {
+  padding: 1.1rem;
+  border-radius: var(--radius-xl);
+}
+
+.panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.editor-form {
+  position: relative;
+  z-index: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.bullet-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.bullet-field {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+  min-width: 0;
+}
+
+.bullet-field > label {
+  display: block;
+  font-weight: 700;
+}
+
+.bullet-editor-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.stage-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.5rem;
+  border-radius: calc(var(--radius-xl) - 8px);
+  background: linear-gradient(180deg, rgba(23, 71, 139, 0.08), rgba(255, 255, 255, 0.42));
+}
+
+.stage {
+  min-height: 0;
+}
+
+.stage .slide-floating-top-right-media {
+  pointer-events: none;
+}
+
+.thumb-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.9rem;
+}
+
+.thumb-strip[hidden] {
+  display: none;
+}
+
+body.is-canvas-preview-fullscreen {
+  overflow: hidden;
+}
+
+.app-shell.is-canvas-preview-fullscreen {
+  width: min(100vw - 1rem, 100%);
+}
+
+.preview-panel.is-canvas-editor-fullscreen {
+  position: fixed;
+  inset: 0.75rem;
+  z-index: 140;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-panel.is-canvas-editor-fullscreen .stage-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  grid-template-columns: 1fr;
+  place-items: center;
+  align-content: center;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+.preview-panel.is-canvas-editor-fullscreen .stage {
+  width: 1280px;
+  height: 720px;
+  min-height: 0;
+  margin: 0 auto;
+  transform: scale(var(--canvas-editor-scale, 1));
+  transform-origin: center center;
+}
+
+.preview-panel.is-canvas-editor-fullscreen .presentation-progress,
+.preview-panel.is-canvas-editor-fullscreen .pedagogy-brief {
+  display: none;
+}
+
+@media (max-width: 1240px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 860px) {
+  .topbar {
+    flex-direction: column;
+  }
+
+  .form-grid,
+  .bullet-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stage-wrap {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    width: min(100vw - 1rem, 100%);
+    margin: 0.5rem auto;
+  }
+
+  .topbar,
+  .panel {
+    border-radius: 22px;
+  }
+
+  .thumb-strip {
+    grid-template-columns: 1fr;
+  }
+}

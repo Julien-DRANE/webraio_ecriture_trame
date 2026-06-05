@@ -1,0 +1,72 @@
+:root {
+  --bg: #edf3f9;
+  --bg-deep: #d7e4f3;
+  --surface: rgba(255, 255, 255, 0.86);
+  --surface-strong: #ffffff;
+  --surface-dark: #0f2137;
+  --ink: #122033;
+  --muted: #5d6c81;
+  --line: rgba(18, 32, 51, 0.12);
+  --blue: #2c73da;
+  --blue-deep: #17478b;
+  --blue-soft: #dbe9fb;
+  --shadow: 0 18px 48px rgba(18, 31, 52, 0.12);
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: "Aptos", "Segoe UI", "Trebuchet MS", sans-serif;
+  background:
+    radial-gradient(circle at 0 0, rgba(44, 115, 218, 0.16), transparent 28%),
+    radial-gradient(circle at 100% 10%, rgba(23, 71, 139, 0.14), transparent 24%),
+    linear-gradient(160deg, var(--bg), var(--bg-deep));
+}
+
+body:has(.app-shell[data-view="presentation"][data-ui-theme="night"]) {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(191, 96, 24, 0.16), transparent 24%),
+    radial-gradient(circle at 88% 14%, rgba(57, 79, 127, 0.24), transparent 26%),
+    radial-gradient(circle at 50% 100%, rgba(14, 24, 42, 0.5), transparent 38%),
+    linear-gradient(160deg, #04070d, #0a1120 52%, #111c31);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+}
+
+textarea {
+  resize: vertical;
+}
